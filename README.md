@@ -1,6 +1,6 @@
-# API de Gestión de Clientes
+# API de Siniestros
 
-Este repositorio contiene una implementación serverless de una API REST para la gestión de clientes utilizando servicios de AWS.
+Este repositorio contiene una implementación serverless de una API REST para gestión de Siniestros utilizando servicios de AWS.
 
 ## Arquitectura
 
