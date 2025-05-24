@@ -24,7 +24,10 @@ jobs:
           cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install
+        run: |
+          yarn install
+          yarn global add esbuild
+          echo "$(yarn global bin)" >> $GITHUB_PATH
 
       - name: Build Lambda functions
         run: yarn build:all

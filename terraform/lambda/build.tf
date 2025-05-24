@@ -7,6 +7,12 @@ resource "null_resource" "lambda_builds" {
 
   provisioner "local-exec" {
     working_dir = ".."
-    command     = "yarn build:all"
+    command     = <<-EOT
+      yarn install
+      mkdir -p build/get-clientes build/get-cliente-by-id
+      yarn add -D esbuild
+      yarn build:all
+    EOT
+    interpreter = ["/bin/bash", "-c"]
   }
 } 
