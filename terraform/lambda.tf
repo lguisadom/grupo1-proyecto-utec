@@ -15,28 +15,35 @@ resource "aws_iam_role_policy_attachment" "lmb_logs" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-resource "aws_iam_policy" "lmb_get_clientes_policy" {
+resource "aws_iam_role_policy" "lambda_inline_policy" {
   name = "policy-${var.group}-${var.env}-${var.lmb_get_clientes_name}-${var.prefix}"
+  role = aws_iam_role.lmb_exec_role.id
+
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
-        Effect   = "Allow",
-        Action   = ["dynamodb:Scan"],
+        Effect = "Allow",
+        Action = [
+          "dynamodb:Scan"
+        ],
         Resource = aws_dynamodb_table.dim_clienteg1.arn
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        Resource = "*"
       }
     ]
   })
 }
 
-resource "aws_iam_policy_attachment" "lmb_policy_attach" {
-  name       = "attach-lmb-dynamodb"
-  roles      = [aws_iam_role.lmb_exec_role.name]
-  policy_arn = aws_iam_policy.lmb_get_clientes_policy.arn
-}
-
 resource "aws_lambda_function" "get_clientes" {
-  function_name = "${var.lmb_get_clientes_name}"
+  function_name = "${var.group}-${var.env}-${var.lmb_get_clientes_name}-${var.prefix}"
   handler       = "get-clientes.handler"
   runtime       = "nodejs20.x"
   role          = aws_iam_role.lmb_exec_role.arn

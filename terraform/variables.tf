@@ -25,7 +25,7 @@ variable "dynamodb_table_name" {
 
 #lmb Functions
 variable "lmb_get_clientes_name" {
-  default = "listar-clientes"
+  default = "get-clientes"
 }
 
 variable "lmb_timeout" {
