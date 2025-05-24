@@ -1,0 +1,206 @@
+openapi: 3.0.3
+info:
+  title: API de Clientes - Seguros
+  description: >
+    API RESTful que permite consultar información de clientes, scoring,
+    siniestros y su historial utilizando su número de DNI.
+  version: 1.0.0
+servers:
+  - url: https://api.miseguros.com/prod
+    description: Entorno de Producción
+
+paths:
+  /clientes:
+    get:
+      summary: Listar todos los clientes
+      tags: [Clientes]
+      operationId: listClientes
+      responses:
+        '200':
+          description: Lista de todos los clientes registrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cliente'
+              examples:
+                ejemploClientes:
+                  summary: Ejemplo de lista de clientes
+                  value:
+                    - id: "12345678"
+                      nombre: "Juan Pérez"
+                      correo: "juanperez@example.com"
+                      telefono: "+54 9 11 1234-5678"
+
+  /clientes/{dni}/scoring:
+    get:
+      summary: Obtener el scoring de un cliente
+      tags: [Scoring]
+      operationId: getScoringByDni
+      parameters:
+        - in: path
+          name: dni
+          required: true
+          schema:
+            type: string
+            example: "12345678"
+          description: DNI del cliente
+      responses:
+        '200':
+          description: Información de scoring del cliente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Scoring'
+              example:
+                dni: "12345678"
+                score: 85
+                nivel: "ALTO"
+        '404':
+          description: Cliente no encontrado
+
+  /clientes/{dni}/siniestros:
+    get:
+      summary: Listar siniestros asociados a un cliente
+      tags: [Siniestros]
+      operationId: getSiniestrosByDni
+      parameters:
+        - name: dni
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678"
+          description: DNI del cliente
+      responses:
+        '200':
+          description: Lista de siniestros asociados al cliente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Siniestro'
+              example:
+                - id: "S001"
+                  fecha: "2023-06-15"
+                  tipo: "Accidente"
+                  descripcion: "Colisión frontal leve"
+        '404':
+          description: Cliente sin siniestros registrados
+
+  /clientes/{dni}/historial:
+    get:
+      summary: Obtener historial completo de un cliente
+      tags: [Historial]
+      operationId: getHistorialByDni
+      parameters:
+        - name: dni
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "12345678"
+          description: DNI del cliente
+      responses:
+        '200':
+          description: Historial completo de eventos del cliente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Historial'
+              example:
+                dni: "12345678"
+                eventos:
+                  - fecha: "2022-08-10"
+                    tipo: "Poliza emitida"
+                    descripcion: "Póliza N° 12435 creada"
+                  - fecha: "2023-03-01"
+                    tipo: "Siniestro reportado"
+                    descripcion: "Accidente en Av. Libertador"
+        '404':
+          description: Cliente no encontrado
+
+components:
+  schemas:
+    Cliente:
+      type: object
+      required: [id, nombre, correo, telefono]
+      properties:
+        id:
+          type: string
+          description: Número de identificación (DNI)
+          example: "12345678"
+        nombre:
+          type: string
+          description: Nombre completo del cliente
+          example: "María González"
+        correo:
+          type: string
+          format: email
+          example: "maria.gonzalez@example.com"
+        telefono:
+          type: string
+          example: "+54 9 11 9876-5432"
+
+    Scoring:
+      type: object
+      required: [dni, score, nivel]
+      properties:
+        dni:
+          type: string
+          example: "12345678"
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+          example: 92
+        nivel:
+          type: string
+          enum: [BAJO, MEDIO, ALTO]
+          example: "ALTO"
+
+    Siniestro:
+      type: object
+      required: [id, fecha, tipo, descripcion]
+      properties:
+        id:
+          type: string
+          description: ID del siniestro
+          example: "S002"
+        fecha:
+          type: string
+          format: date
+          example: "2023-05-20"
+        tipo:
+          type: string
+          description: Tipo de siniestro
+          example: "Robo"
+        descripcion:
+          type: string
+          description: Detalles adicionales
+          example: "Robo parcial del vehículo en estacionamiento"
+
+    Historial:
+      type: object
+      required: [dni, eventos]
+      properties:
+        dni:
+          type: string
+          example: "12345678"
+        eventos:
+          type: array
+          items:
+            type: object
+            properties:
+              fecha:
+                type: string
+                format: date
+                example: "2023-01-01"
+              tipo:
+                type: string
+                example: "Alta póliza"
+              descripcion:
+                type: string
+                example: "Póliza de cobertura total activada"
