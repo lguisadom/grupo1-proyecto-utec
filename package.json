@@ -1,0 +1,21 @@
+{
+  "name": "grupo1-proyecto-utec",
+  "version": "1.0.0",
+  "description": "Proyecto grupo 1 - siniestros",
+  "main": "index.js",
+  "repository": "https://github.com/lguisadom/grupo1-proyecto-utec",
+  "author": "Luis Guisado",
+  "license": "MIT",
+  "scripts": {
+    "build:get-clientes": "esbuild functions/get-clientes/get-clientes.mjs --bundle --platform=node --target=node20 --outfile=build/get-clientes/index.js && cd build/get-clientes && zip -r ../get-clientes.zip .",
+    "build:post-clientes": "esbuild functions/post-clientes/post-clientes.mjs --bundle --platform=node --target=node20 --outfile=build/post-clientes/index.js && cd build/post-clientes && zip -r ../post-clientes.zip .",
+    "build:all": "yarn build:get-clientes && yarn build:post-clientes"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.817.0",
+    "@aws-sdk/lib-dynamodb": "^3.817.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.4"
+  }
+}
