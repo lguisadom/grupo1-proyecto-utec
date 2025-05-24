@@ -3,10 +3,11 @@ import { DynamoDBDocumentClient, ScanCommand } from "@aws-sdk/lib-dynamodb";
 
 const client = new DynamoDBClient({});
 const ddbDocClient = DynamoDBDocumentClient.from(client);
+const TABLE_NAME = process.env.DYNAMODB_TABLE_NAME;
 
 export const handler = async (event) => {
   const command = new ScanCommand({
-    TableName: "dim_clienteg1",
+    TableName: TABLE_NAME,
     Limit: 100
   });
 

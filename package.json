@@ -8,8 +8,8 @@
   "license": "MIT",
   "scripts": {
     "build:get-clientes": "esbuild functions/get-clientes/get-clientes.mjs --bundle --platform=node --target=node20 --outfile=build/get-clientes/get-clientes.js && cd build/get-clientes && zip -r ../get-clientes.zip .",
-    "build:post-clientes": "esbuild functions/post-clientes/post-clientes.mjs --bundle --platform=node --target=node20 --outfile=build/post-clientes/post-clientes.js && cd build/post-clientes && zip -r ../post-clientes.zip .",
-    "build:all": "yarn build:get-clientes && yarn build:post-clientes"
+    "build:get-cliente-by-id": "esbuild functions/get-cliente-by-id/get-cliente-by-id.mjs --bundle --platform=node --target=node20 --outfile=build/get-cliente-by-id/get-cliente-by-id.js && cd build/get-cliente-by-id && zip -r ../get-cliente-by-id.zip .",
+    "build:all": "yarn build:get-clientes && yarn build:get-cliente-by-id"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.817.0",

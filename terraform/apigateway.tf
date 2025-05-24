@@ -1,7 +1,8 @@
 locals {
   swagger_template = templatefile("${path.module}/openapi/swagger.yaml", {
-    region    = var.aws_region
-    lambdaArn = aws_lambda_function.get_clientes.arn
+    region           = var.aws_region
+    lambdaArn        = module.lambda.get_clientes_arn
+    getClienteByIdArn = module.lambda.get_cliente_by_id_arn
   })
 }
 
@@ -14,10 +15,18 @@ resource "aws_api_gateway_rest_api" "clientes_api" {
   }
 }
 
-resource "aws_lambda_permission" "allow_apigw_invoke" {
-  statement_id  = "AllowInvokeByAPIGateway"
+resource "aws_lambda_permission" "allow_apigw_invoke_get_clientes" {
+  statement_id  = "AllowInvokeByAPIGatewayGetClientes"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.get_clientes.arn
+  function_name = module.lambda.get_clientes_arn
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.clientes_api.execution_arn}/*/*/*"
+}
+
+resource "aws_lambda_permission" "allow_apigw_invoke_get_cliente_by_id" {
+  statement_id  = "AllowInvokeByAPIGatewayGetClienteById"
+  action        = "lambda:InvokeFunction"
+  function_name = module.lambda.get_cliente_by_id_arn
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.clientes_api.execution_arn}/*/*/*"
 }

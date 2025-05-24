@@ -18,11 +18,6 @@ variable "prefix" {
   default = "test"
 }
 
-#DynamoDB
-variable "dynamodb_table_name" {
-  default = "dim_clienteg1"
-}
-
 #lmb Functions
 variable "lmb_get_clientes_name" {
   default = "get-clientes"
