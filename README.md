@@ -1,6 +1,7 @@
-# API de Siniestros
+# API de Gestión de Clientes
 
-Este repositorio contiene una implementación serverless de una API REST para el caso de Siniestros de Vehículos
+Este repositorio contiene una implementación serverless de una API REST para la gestión de clientes utilizando servicios de AWS.
+
 ## Arquitectura
 
 El proyecto implementa una arquitectura serverless utilizando los siguientes servicios de AWS:
@@ -59,6 +60,7 @@ Cliente HTTP → API Gateway → Lambda → DynamoDB
 - **AWS SDK v3**: Cliente para interactuar con servicios AWS
 - **Terraform**: Para la infraestructura como código
 - **esbuild**: Para el empaquetado de las funciones Lambda
+- **GitHub Actions**: Para CI/CD
 
 ## Configuración del Proyecto
 
@@ -74,6 +76,10 @@ Cliente HTTP → API Gateway → Lambda → DynamoDB
 Las funciones Lambda utilizan las siguientes variables de entorno:
 - `DYNAMODB_TABLE_NAME`: Nombre de la tabla DynamoDB
 
+Para GitHub Actions, necesitas configurar los siguientes secrets:
+- `AWS_ACCESS_KEY_ID`: ID de clave de acceso de AWS
+- `AWS_SECRET_ACCESS_KEY`: Clave secreta de AWS
+
 ### Scripts de Construcción
 
 ```bash
@@ -87,7 +93,9 @@ yarn build:get-clientes
 yarn build:get-cliente-by-id
 ```
 
-### Despliegue
+## Despliegue
+
+### Despliegue Manual
 
 1. Construir las funciones Lambda:
 ```bash
@@ -110,12 +118,28 @@ terraform plan
 terraform apply
 ```
 
+### Despliegue Automático (CI/CD)
+
+El proyecto utiliza GitHub Actions para el despliegue automático. El pipeline se activa cuando:
+
+1. Se realizan cambios en:
+   - Código de funciones Lambda (`functions/**`)
+   - Archivos de Terraform (`terraform/**`)
+   - Package.json
+
+2. El pipeline ejecuta:
+   - Compilación de funciones Lambda
+   - Validación de Terraform
+   - Plan de Terraform
+   - Aplicación de cambios (solo en main)
+
 ## Estructura de Módulos Terraform
 
 ### Módulo Lambda
 - Gestiona las funciones Lambda y sus permisos
 - Define roles IAM y políticas
 - Configura variables de entorno
+- Incluye proceso de build automático
 
 ### Módulo DynamoDB
 - Define la tabla de clientes
@@ -132,6 +156,8 @@ terraform apply
 - Roles IAM con mínimos privilegios
 - Políticas específicas por función
 - Logs habilitados en CloudWatch
+- Despliegue automatizado seguro
+- Validación de cambios antes del despliegue
 
 ## Mantenimiento
 
@@ -141,10 +167,13 @@ Para agregar nuevas funciones Lambda:
 2. Agregar script de construcción en `package.json`
 3. Definir recursos en Terraform
 4. Actualizar la definición OpenAPI
+5. Los cambios se desplegarán automáticamente al hacer push
 
 ## Contribución
 
 1. Crear rama feature
 2. Realizar cambios
 3. Ejecutar pruebas
-4. Crear Pull Request 
+4. Crear Pull Request
+
+Los cambios se desplegarán automáticamente al hacer merge a main. 

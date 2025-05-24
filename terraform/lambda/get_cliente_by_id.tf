@@ -14,4 +14,6 @@ resource "aws_lambda_function" "get_cliente_by_id" {
       DYNAMODB_TABLE_NAME = var.dynamodb_table_name
     }
   }
+
+  depends_on = [null_resource.lambda_builds]
 } 

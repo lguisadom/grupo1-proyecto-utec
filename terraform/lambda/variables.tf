@@ -12,6 +12,11 @@ variable "dynamodb_table_name" {
   type        = string
 }
 
+variable "lambda_source_dir" {
+  description = "Ruta al directorio de código fuente de las funciones Lambda"
+  default     = "../functions"
+}
+
 variable "lmb_timeout" {
   default = 60
 }
@@ -26,11 +31,6 @@ variable "lmb_get_clientes_name" {
 
 variable "lmb_get_cliente_by_id_name" {
   default = "obtener-cliente"
-}
-
-variable "lambda_source_dir" {
-  description = "Directorio que contiene el código fuente de las funciones Lambda"
-  default     = "../functions"
 }
 
 variable "lmb_get_clientes_zip_path" {
