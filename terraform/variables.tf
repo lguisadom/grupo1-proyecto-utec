@@ -15,7 +15,7 @@ variable "group" {
 }
 
 variable "prefix" {
-  default = "test"
+  default = "test-01"
 }
 
 #lmb Functions
