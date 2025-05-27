@@ -188,4 +188,131 @@ Para agregar nuevas funciones Lambda:
 3. Ejecutar pruebas
 4. Crear Pull Request
 
-Los cambios se desplegarán automáticamente al hacer merge a main. 
+Los cambios se desplegarán automáticamente al hacer merge a main.
+
+## Infraestructura como Código (Terraform)
+
+### Estructura de Directorios
+```
+terraform/
+├── main.tf              # Configuración principal y módulos
+├── variables.tf         # Variables globales
+├── backend.tf          # Configuración del backend de Terraform
+├── backend_infra.tf    # Infraestructura del backend
+├── apigateway.tf       # Configuración de API Gateway
+├── dynamodb/           # Módulo de DynamoDB
+├── lambda/             # Módulo de funciones Lambda
+├── glue/              # Módulo de AWS Glue
+├── s3/                # Módulo de Amazon S3
+└── openapi/           # Definiciones OpenAPI
+```
+
+### Configuración Principal (main.tf)
+El archivo `main.tf` define la configuración central de la infraestructura:
+
+- **Provider AWS**: Configura la región de AWS donde se desplegarán los recursos
+- **Versiones Requeridas**: 
+  - Terraform >= 1.3
+  - Provider AWS ~> 5.0
+
+### Módulos
+La infraestructura está organizada en módulos independientes:
+
+#### 1. Módulo DynamoDB
+- **Propósito**: Gestión de la base de datos NoSQL
+- **Configuración**:
+  - Tabla para almacenamiento de datos de siniestros
+  - Configuración de capacidad de lectura/escritura
+  - Definición de claves primarias
+
+#### 2. Módulo Lambda
+- **Propósito**: Gestión de funciones serverless
+- **Características**:
+  - Integración con DynamoDB (permisos y accesos)
+  - Configuración de memoria y timeout
+  - Variables de entorno específicas
+
+#### 3. Módulo Glue
+- **Propósito**: Procesamiento de datos ETL
+- **Características**:
+  - Scripts de transformación de datos
+  - Integración con S3 y DynamoDB
+  - Configuración de jobs de procesamiento
+
+#### 4. Módulo S3
+- **Propósito**: Almacenamiento de objetos
+- **Características**:
+  - Buckets para scripts de Glue
+  - Configuración de políticas de acceso
+  - Gestión del ciclo de vida de objetos
+
+### Variables Globales (variables.tf)
+Configuración centralizada de variables:
+
+- **env**: Entorno de despliegue (default: "dev")
+- **aws_region**: Región de AWS (default: "us-east-1")
+- **group**: Identificador de grupo (default: "g1")
+- **prefix**: Prefijo para recursos (default: "test-03")
+
+#### Variables de Lambda
+- **lmb_timeout**: Tiempo máximo de ejecución (60 segundos)
+- **lmb_memory_size**: Memoria asignada (128 MB)
+- **lmb_get_clientes_name**: Nombre de la función Lambda
+
+#### Variables de API Gateway
+- **api_name**: Nombre del API Gateway (default: "apigateway-siniestros")
+
+### Backend y Estado (backend.tf y backend_infra.tf)
+- **Propósito**: Gestión del estado de Terraform
+- **Características**:
+  - Almacenamiento remoto del estado
+  - Bloqueo para prevenir conflictos
+  - Infraestructura necesaria para el backend
+
+### API Gateway (apigateway.tf)
+- **Propósito**: Exposición de APIs REST
+- **Configuración**:
+  - Definición de endpoints
+  - Integración con funciones Lambda
+  - Configuración de seguridad y autenticación
+
+### Consideraciones de Seguridad
+1. **IAM**: 
+   - Roles y políticas con mínimos privilegios
+   - Segregación de permisos por función
+   
+2. **Networking**:
+   - Configuración de VPC (si aplica)
+   - Políticas de acceso y seguridad
+
+3. **Logs y Monitoreo**:
+   - CloudWatch Logs habilitado
+   - Métricas y alertas configuradas
+
+### Despliegue de Infraestructura
+1. **Inicialización**:
+   ```bash
+   terraform init
+   ```
+
+2. **Validación**:
+   ```bash
+   terraform plan
+   ```
+
+3. **Aplicación**:
+   ```bash
+   terraform apply
+   ```
+
+4. **Destrucción** (cuando sea necesario):
+   ```bash
+   terraform destroy
+   ```
+
+### Mejores Prácticas Implementadas
+1. **Modularización**: Código organizado en módulos reutilizables
+2. **Variables**: Uso de variables para configuración flexible
+3. **Documentación**: Comentarios y estructura clara
+4. **Versionamiento**: Control de versiones de providers y módulos
+5. **Seguridad**: Principio de mínimo privilegio 
