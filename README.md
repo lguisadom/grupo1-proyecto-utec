@@ -2,6 +2,10 @@
 
 Este repositorio contiene una implementación serverless de una API REST para gestión de Siniestros utilizando servicios de AWS.
 
+## Documentación
+La documentación completa de la API está disponible en:
+[Documentación OpenAPI](https://lguisadom.github.io/grupo1-proyecto-utec/#/)
+
 ## Arquitectura
 
 El proyecto implementa una arquitectura serverless utilizando los siguientes servicios de AWS:
