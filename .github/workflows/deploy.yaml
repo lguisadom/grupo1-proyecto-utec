@@ -71,8 +71,7 @@ jobs:
           terraform init \
             -backend-config="bucket=g1-terraform-state-utec" \
             -backend-config="key=terraform.tfstate" \
-            -backend-config="region=us-east-1" \
-            -backend-config="dynamodb_table=g1-terraform-state-lock"
+            -backend-config="region=us-east-1"
 
       - name: Terraform Validate
         run: terraform validate
