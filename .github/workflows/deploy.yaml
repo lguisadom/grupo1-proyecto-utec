@@ -6,6 +6,7 @@ on:
       - 'terraform/**'
       - 'functions/**'
       - 'package.json'
+      - '.github/**'
 
   workflow_dispatch:
       
