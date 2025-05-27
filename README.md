@@ -26,15 +26,21 @@ Cliente HTTP → API Gateway → Lambda → DynamoDB
 ```
 .
 ├── build/                  # Directorio de artefactos compilados
+├── docs/                   # Documentación de la API
+│   ├── index.html         # Documentación interactiva
+│   └── openapi.yaml       # Especificación OpenAPI
 ├── functions/             # Funciones Lambda
 │   ├── get-clientes/     # Lambda para listar clientes
 │   └── get-cliente-by-id/ # Lambda para obtener cliente por ID
+├── scripts/              # Scripts de utilidad
 ├── terraform/            # Infraestructura como código
 │   ├── dynamodb/        # Módulo para recursos DynamoDB
 │   ├── lambda/          # Módulo para recursos Lambda
 │   ├── openapi/         # Definiciones OpenAPI/Swagger
 │   ├── main.tf          # Configuración principal de Terraform
 │   ├── variables.tf     # Variables globales
+│   ├── backend.tf       # Configuración del backend
+│   ├── backend_infra.tf # Infraestructura del backend
 │   └── apigateway.tf    # Configuración de API Gateway
 └── package.json         # Dependencias y scripts de construcción
 ```
@@ -60,10 +66,12 @@ Cliente HTTP → API Gateway → Lambda → DynamoDB
 
 ## Tecnologías Utilizadas
 
-- **Node.js**: Runtime para las funciones Lambda
+- **Node.js**: Runtime para las funciones Lambda (Node.js 20)
 - **AWS SDK v3**: Cliente para interactuar con servicios AWS
+  - @aws-sdk/client-dynamodb: ^3.817.0
+  - @aws-sdk/lib-dynamodb: ^3.817.0
 - **Terraform**: Para la infraestructura como código
-- **esbuild**: Para el empaquetado de las funciones Lambda
+- **esbuild**: Para el empaquetado de las funciones Lambda (^0.25.4)
 - **GitHub Actions**: Para CI/CD
 
 ## Configuración del Proyecto
