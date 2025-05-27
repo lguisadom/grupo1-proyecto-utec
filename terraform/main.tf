@@ -22,6 +22,26 @@ module "lambda" {
   dynamodb_table_name = module.dynamodb.table_name
 }
 
+module "glue" {
+  source = "./glue"
+
+  group = var.group
+  env = var.env
+  prefix = var.prefix
+  aws_region = var.aws_region
+
+  s3_glue_scripts_bucket = module.s3.s3_glue_scripts_bucket
+  table_name = module.dynamodb.table_name
+}
+
+module "s3" {
+  source = "./s3"
+
+  group = var.group
+  env = var.env
+  prefix = var.prefix
+}
+
 terraform {
   required_version = ">= 1.3"
   required_providers {

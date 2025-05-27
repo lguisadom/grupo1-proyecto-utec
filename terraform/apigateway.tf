@@ -7,7 +7,7 @@ locals {
 }
 
 resource "aws_api_gateway_rest_api" "clientes_api" {
-  name = "${var.group}-${var.env}-${var.api_name}-${var.prefix}"
+  name = "agw-${var.group}-${var.env}-${var.api_name}-${var.prefix}"
   body = local.swagger_template
 
   endpoint_configuration {
